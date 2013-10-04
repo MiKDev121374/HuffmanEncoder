@@ -63,7 +63,7 @@ class Encoder{
 				alphaIntArray[i] = Integer.valueOf(freqOfAlpha);
 				freqTotal += alphaIntArray[i];
 				freqCharArray[i] = new AlphaChar(alphabet. alphabetArray[i], alphaIntArray[i]);
-				//System.out.println(freqTotal);
+				System.out.println(freqCharArray[i].freq);
 			}
 			else {
 				System.out.println("frequenciesFile does not have enough freequencies to assign to this alphabet!");
@@ -77,16 +77,37 @@ class Encoder{
 		for(int i = 0; i < numToGenerate; i++){
 			// generate a random number in a rannge 0 to freqTotal
 
+			int randNum = rand.nextInt(freqTotal) + 1;
 
 			// Switch
-			int randNum = rand.nextInt(freqTotal) + 1;
-			System.out.println("random number generated = " + randNum);
+			// System.out.println("random number generated = " + randNum);
 			// swich ()
 
-			// if (randNum > 0 || randNum < freqCharArray[0].freq){
+			// if (randNum > 0 && randNum < freqCharArray[0].freq){
 			// 	// write A to a file
+			// 	System.out.print(freqCharArray[0].letter);
 			// }
-			// else if (randNum > freqCharArray[0].freq ||)
+			// else if (randNum >= freqCharArray[0].freq && randNum < freqCharArray[1].freq){
+			// 	System.out.print(freqCharArray[1].letter);
+			// }
+			// else if (randNum >= freqCharArray[1].freq && randNum < freqCharArray[2].freq){
+			// 	System.out.print(freqCharArray[2].letter);
+			// }
+			// else if (randNum >= freqCharArray[2].freq && randNum < freqCharArray[3].freq){
+			// 	System.out.print(freqCharArray[3].letter);
+			// }
+			// else if (randNum >= freqCharArray[3].freq && randNum < freqCharArray[4].freq){
+			// 	System.out.print(freqCharArray[4].letter);
+			// }
+			// else if (randNum >= freqCharArray[4].freq && randNum < freqCharArray[5].freq){
+			// 	System.out.print(freqCharArray[5].letter);
+			// }
+			// else if (randNum >= freqCharArray[5].freq && randNum < freqCharArray[6].freq){
+			// 	System.out.print(freqCharArray[6].letter);
+			// }
+			// else{
+			// 	System.out.println("bad random number generated!");
+			// }
 
 		}
 		System.out.println("\nEncoder!");
