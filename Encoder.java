@@ -46,12 +46,14 @@ class Encoder{
 		
 		String freqOfAlpha;
 		int[] alphaIntArray = new int[alphabet.alphaLength];
+		int freqTotal = 0;
 		for (int i=0; i<alphabet.alphaLength; i++){
 			if (freqFile.hasNext()){
 				freqOfAlpha = freqFile.nextLine();
 				System.out.println(freqOfAlpha);
 				alphaIntArray[i] = Integer.valueOf(freqOfAlpha);
-
+				freqTotal += alphaIntArray[i];
+				//System.out.println(freqTotal);
 			}
 			else {
 				System.out.println("frequenciesFile does not have enough freequencies to assign to this alphabet!");
