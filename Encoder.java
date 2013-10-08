@@ -22,10 +22,14 @@ class AlphaChar{
 class Encoder{
 	public static void main(String[] args) throws IOException{
 
-		//import file and generate matching alphabet
+		//import frequencies file and generate matching alphabet
 		Scanner freqFile = new Scanner(new FileReader(args[0]));
 		ArrayList<AlphaChar> freqCharArray = new ArrayList<AlphaChar>();
 		ArrayList<Character> dartboard = new ArrayList<Character>();
+		//Create file to encode and decode
+        File testText = new File("testText");
+        FileWriter fw = new FileWriter(testText);
+        BufferedWriter bw = new BufferedWriter(fw);
 
 		int freqOfAlpha;
 		int freqTotal = 0;
@@ -40,12 +44,12 @@ class Encoder{
 			}
 			freqTotal += freqOfAlpha;
 			lengthOfAlphabet++;
-			System.out.println("===nextAlphabetChar= " + nextAlphabetChar);
+			//System.out.println("===nextAlphabetChar= " + nextAlphabetChar);
 		}
 
 		// generate chars in right proportion
 		int numToGenerate = Integer.valueOf(args[1]);
-		System.out.println("k = " + numToGenerate);
+		System.out.println("number of chars to encode/decode= " + numToGenerate);
 		Random rand = new Random();
 
 		//Prints dartboard arraylist
@@ -58,10 +62,13 @@ class Encoder{
 			// generate a random number in a range 0 to freqTotal
 			int randNum = rand.nextInt(freqTotal);
 			//System.out.println("random number generated = " + randNum);
-			System.out.println("dart landed on " + dartboard.get(randNum));
+			//System.out.println("dart landed on " + dartboard.get(randNum));
+			bw.write(dartboard.get(randNum));
 
 
 		}
+		bw.flush();
+        bw.close();
 		System.out.println("\nEncoder!");
 
 	}
