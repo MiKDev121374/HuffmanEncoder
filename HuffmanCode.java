@@ -31,13 +31,16 @@ class HuffmanNode extends HuffmanTree {
  
 public class HuffmanCode {
     // input is an array of frequencies, indexed by character code
-    public static HuffmanTree buildTree(int[] charFreqs) {
+    public static HuffmanTree buildTree(ArrayList<AlphaChar> freqCharArray) {
         PriorityQueue<HuffmanTree> trees = new PriorityQueue<HuffmanTree>();
         // initially, we have a forest of leaves
         // one for each non-empty character
-        for (int i = 0; i < charFreqs.length; i++)
-            if (charFreqs[i] > 0)
-                trees.offer(new HuffmanLeaf(charFreqs[i], (char)i));
+        for (int i = 0; i < freqCharArray.size(); i++)
+            if (freqCharArray.get(i).freq > 0){
+                //trees.offer(new HuffmanLeaf(charFreqs[i], (char)i));
+                //freqCharArray
+                trees.offer(new HuffmanLeaf(freqCharArray.get(i).freq, freqCharArray.get(i).letter));
+            }
  
         assert trees.size() > 0;
         // loop until there is only one tree left
@@ -75,21 +78,24 @@ public class HuffmanCode {
         }
     }
  
-    public static void main(String[] args) {
-        String test = "this is an example for huffman encoding";
+    // public static void main(String[] args) {
+    //     String test = "this is an example for huffman encoding";
  
-        // we will assume that all our characters will have
-        // code less than 256, for simplicity
-        int[] charFreqs = new int[256];
-        // read each character and record the frequencies
-        for (char c : test.toCharArray())
-            charFreqs[c]++;
+    //     // we will assume that all our characters will have
+    //     // code less than 256, for simplicity
+    //     int[] charFreqs = new int[256];
+    //     // read each character and record the frequencies
+    //     for (char c : test.toCharArray())
+    //         charFreqs[c]++;
  
-        // build tree
-        HuffmanTree tree = buildTree(charFreqs);
+    //     // build tree
+    //     //*****change this to receive an array of our character frequencies
+    //     HuffmanTree tree = buildTree(charFreqs);
+    //     //freqCharArray
+    //     //HuffmanTree tree = buildTree(freqCharArray);
  
-        // print out results
-        System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
-        printCodes(tree, new StringBuffer());
-    }
+    //     // print out results
+    //     System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
+    //     printCodes(tree, new StringBuffer());
+    // }
 }

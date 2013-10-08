@@ -57,18 +57,26 @@ class Encoder{
 		// 	System.out.print(dartboard.get(i));
 		// }
 
-
+		//***Generate proportional random file testText
 		for(int i = 0; i < numToGenerate; i++){
 			// generate a random number in a range 0 to freqTotal
 			int randNum = rand.nextInt(freqTotal);
 			//System.out.println("random number generated = " + randNum);
 			//System.out.println("dart landed on " + dartboard.get(randNum));
 			bw.write(dartboard.get(randNum));
-
-
 		}
 		bw.flush();
         bw.close();
+
+        HuffmanCode huffman = new HuffmanCode();
+        HuffmanTree tree = huffman.buildTree(freqCharArray);
+        // print out results
+        System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
+        huffman.printCodes(tree, new StringBuffer());
+
+
+
+
 		System.out.println("\nEncoder!");
 
 	}
