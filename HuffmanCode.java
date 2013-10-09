@@ -92,15 +92,17 @@ public class HuffmanCode {
             HuffmanLeaf leaf = (HuffmanLeaf)tree;
             //decodedPairings.(code, leaf.value);
             decodedSB.append(leaf.value);
-            
+            System.out.println("final leaf == "+leaf.value);
         }
         else if (tree instanceof HuffmanNode){
             HuffmanNode node = (HuffmanNode)tree;
 
             if (code[index] == 0){
+                System.out.println("code[index] = " + code[index]);
                 decode(node.left, code, index++);
             }
-            else if (code[index] == 1){
+            else {
+                System.out.println("code[index] = " + code[index]);
                 decode(node.right, code, index++);
             }
         }

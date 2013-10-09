@@ -49,7 +49,7 @@ class Decode{
 	//get file testText.enc1
 	//parse and write decoded version to testText.dec1
 	Decode(File encTestText, HuffmanCode huffman, HuffmanTree tree){
-		int[] toDecode = {0,0,1,0};
+		int[] toDecode = {0,1};
 		huffman.decode(tree, toDecode, 0);
 		System.out.println("\nhuffman.decodedSB====================");
 		System.out.println(huffman.decodedSB);
