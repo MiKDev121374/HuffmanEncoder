@@ -17,8 +17,8 @@ class AlphaChar{
 class Encode{
 	//get file testText
 	//parse each char, write encoded version to testText.enc1
-	Encode(File file, HuffmanCode huffman) throws IOException{
-		File encTestText = new File("testText.enc1");
+	Encode(File file, File encTestText, HuffmanCode huffman) throws IOException{
+		
         FileWriter encFw = new FileWriter(encTestText);
         BufferedWriter encBw = new BufferedWriter(encFw);
 
@@ -36,6 +36,7 @@ class Encode{
         		System.out.print(charToEncode[i]);
         		// file.write(huffman.encodedPairings.get(charToEncode[i]));
         		System.out.print(huffman.encodedPairings.get(charToEncode[i]));
+        		encBw.write(huffman.encodedPairings.get(charToEncode[i]));
         	}
         }
 
@@ -47,6 +48,12 @@ class Encode{
 class Decode{
 	//get file testText.enc1
 	//parse and write decoded version to testText.dec1
+	Decode(File encTestText, HuffmanCode huffman, HuffmanTree tree){
+		int[] toDecode = {0,0,1,0};
+		huffman.decode(tree, toDecode, 0);
+		System.out.println("\nhuffman.decodedSB====================");
+		System.out.println(huffman.decodedSB);
+	}
 }
 
 
@@ -110,15 +117,19 @@ class Encoder{
         System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
         huffman.printCodes(tree, new StringBuffer());
         //print chars and associated encoding value
-        for (int i=0; i<lengthOfAlphabet; i++){
-        	System.out.println("char = " + (char)(i+65));
-        	System.out.println("encoded pairing = " + huffman.encodedPairings.get((char)(i+65)));
-        }
+        // for (int i=0; i<lengthOfAlphabet; i++){
+        // 	System.out.println("char = " + (char)(i+65));
+        // 	System.out.println("encoded pairing = " + huffman.encodedPairings.get((char)(i+65)));
+        // }
         for (int i = 0; i < freqCharArray.size(); i++){
         	freqCharArray.get(i).encoding = huffman.encodedPairings.get(freqCharArray.get(i).letter);
-        	System.out.println("encoding for " + freqCharArray.get(i).letter + " set to " + freqCharArray.get(i).encoding);
+        	//System.out.println("encoding for " + freqCharArray.get(i).letter + " set to " + freqCharArray.get(i).encoding);
         }
-        Encode encodeFile = new Encode(testText, huffman);
+
+
+        File encTestText = new File("testText.enc1");
+        Encode encodeFile = new Encode(testText, encTestText, huffman);
+        Decode decodeFile = new Decode(encTestText, huffman, tree);
 
 
 
