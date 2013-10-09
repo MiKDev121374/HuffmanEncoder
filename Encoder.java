@@ -12,15 +12,35 @@ class AlphaChar{
 		letter = l;
 		freq = fr;
 	}
-
-
 }
 
 class Encode{
 	//get file testText
 	//parse each char, write encoded version to testText.enc1
-	Encode(File file){
+	Encode(File file, HuffmanCode huffman) throws IOException{
+		File encTestText = new File("testText.enc1");
+        FileWriter encFw = new FileWriter(encTestText);
+        BufferedWriter encBw = new BufferedWriter(encFw);
 
+        Scanner encFile1 = new Scanner(new FileReader(file));
+
+        String fileInput;
+        
+        if (encFile1.hasNext()){
+        	// System.out.println(encFile1.next());
+        	// file.write(huffman.encodedPairings.get(encFile1.next()));
+        	fileInput = encFile1.next();
+        	char[] charToEncode = fileInput.toCharArray();
+
+        	for (int i = 0; i < charToEncode.length; i++){
+        		System.out.print(charToEncode[i]);
+        		// file.write(huffman.encodedPairings.get(charToEncode[i]));
+        		System.out.print(huffman.encodedPairings.get(charToEncode[i]));
+        	}
+        }
+
+        encBw.flush();
+        encBw.close();
 	}
 }
 
@@ -98,7 +118,7 @@ class Encoder{
         	freqCharArray.get(i).encoding = huffman.encodedPairings.get(freqCharArray.get(i).letter);
         	System.out.println("encoding for " + freqCharArray.get(i).letter + " set to " + freqCharArray.get(i).encoding);
         }
-        Encode encodeFile = new Encode(testText);
+        Encode encodeFile = new Encode(testText, huffman);
 
 
 
