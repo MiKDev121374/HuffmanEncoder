@@ -3,9 +3,7 @@ import java.io.*;
 import java.lang.Math;
 
 class AlphaChar{
-	//alphabet char
-	//freq
-	//encode
+	//***change to string to handle double char
 	public char letter;
 	public int freq;
 	public String encode;
@@ -17,6 +15,18 @@ class AlphaChar{
 
 }
 
+class Encode{
+	//get file testText
+	//parse each char, write encoded version to testText.enc1
+	Encode(File file){
+
+	}
+}
+
+class Decode{
+	//get file testText.enc1
+	//parse and write decoded version to testText.dec1
+}
 
 
 class Encoder{
@@ -31,6 +41,8 @@ class Encoder{
         FileWriter fw = new FileWriter(testText);
         BufferedWriter bw = new BufferedWriter(fw);
 
+
+        //===Define the alphabet based on given frequency file
 		int freqOfAlpha;
 		int freqTotal = 0;
 		int lengthOfAlphabet = 0;
@@ -47,17 +59,18 @@ class Encoder{
 			//System.out.println("===nextAlphabetChar= " + nextAlphabetChar);
 		}
 
-		// generate chars in right proportion
+
+		//===Generate dartboard for proportional character generation
 		int numToGenerate = Integer.valueOf(args[1]);
 		System.out.println("number of chars to encode/decode= " + numToGenerate);
 		Random rand = new Random();
-
 		//Prints dartboard arraylist
 		// for (int i=0; i<freqTotal; i++){
 		// 	System.out.print(dartboard.get(i));
 		// }
 
-		//***Generate proportional random file testText
+
+		//===Generate proportional random file testText
 		for(int i = 0; i < numToGenerate; i++){
 			// generate a random number in a range 0 to freqTotal
 			int randNum = rand.nextInt(freqTotal);
@@ -68,12 +81,19 @@ class Encoder{
 		bw.flush();
         bw.close();
 
+
+        //===Get Huffman encoding for each letter of the alphabet
         HuffmanCode huffman = new HuffmanCode();
         HuffmanTree tree = huffman.buildTree(freqCharArray);
         // print out results
         System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
         huffman.printCodes(tree, new StringBuffer());
-
+        //print chars and associated encoding value
+        for (int i=0; i<lengthOfAlphabet; i++){
+        	System.out.println("char = " + (char)(i+65));
+        	System.out.println("encoded pairing = " + huffman.encodedPairings.get((char)(i+65)));
+        }
+        Encode encodeFile = new Encode(testText);
 
 
 

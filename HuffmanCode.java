@@ -32,6 +32,7 @@ class HuffmanNode extends HuffmanTree {
 }
  
 public class HuffmanCode {
+    public static HashMap<Character, String> encodedPairings = new HashMap<Character, String>();
     // input is an array of frequencies, indexed by character code
     public static HuffmanTree buildTree(ArrayList<AlphaChar> freqCharArray) {
         PriorityQueue<HuffmanTree> trees = new PriorityQueue<HuffmanTree>();
@@ -59,11 +60,14 @@ public class HuffmanCode {
  
     public static void printCodes(HuffmanTree tree, StringBuffer prefix) {
         assert tree != null;
+
+
         if (tree instanceof HuffmanLeaf) {
             HuffmanLeaf leaf = (HuffmanLeaf)tree;
  
             // print out character, frequency, and code for this leaf (which is just the prefix)
             System.out.println(leaf.value + "\t" + leaf.frequency + "\t" + prefix);
+            encodedPairings.put(leaf.value, prefix.toString());
  
         } else if (tree instanceof HuffmanNode) {
             HuffmanNode node = (HuffmanNode)tree;
