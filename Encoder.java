@@ -6,12 +6,13 @@ class AlphaChar{
 	//***change to string to handle double char
 	public char letter;
 	public int freq;
-	public String encode;
+	public String encoding;
 
 	AlphaChar(char l, int fr){
 		letter = l;
 		freq = fr;
 	}
+
 
 }
 
@@ -92,6 +93,10 @@ class Encoder{
         for (int i=0; i<lengthOfAlphabet; i++){
         	System.out.println("char = " + (char)(i+65));
         	System.out.println("encoded pairing = " + huffman.encodedPairings.get((char)(i+65)));
+        }
+        for (int i = 0; i < freqCharArray.size(); i++){
+        	freqCharArray.get(i).encoding = huffman.encodedPairings.get(freqCharArray.get(i).letter);
+        	System.out.println("encoding for " + freqCharArray.get(i).letter + " set to " + freqCharArray.get(i).encoding);
         }
         Encode encodeFile = new Encode(testText);
 
