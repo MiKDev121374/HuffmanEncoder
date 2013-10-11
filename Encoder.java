@@ -46,6 +46,7 @@ class Encode{
 class Decode{
 	//get file testText.enc1
 	//parse and write decoded version to testText.dec1
+
 	Decode(File encTestText, File decTestText, HuffmanTree newTree, HuffmanCode huffman, HuffmanTree tree) throws IOException{
 
                 FileWriter decFw = new FileWriter(decTestText);
@@ -72,6 +73,7 @@ class Decode{
 		// System.out.println(huffman.decodedSB);
                 decBw.flush();
                 decBw.close();
+
 	}
 }
 
@@ -150,7 +152,11 @@ class Encoder{
         File encTestText = new File("testText.enc1");
         File decTestText = new File("testText.dec1");
         Encode encodeFile = new Encode(testText, encTestText, huffman);
+<<<<<<< HEAD
         Decode decodeFile = new Decode(encTestText, decTestText, newTree, huffman, tree);
+=======
+        Decode decodeFile = new Decode(encTestText, newTree, huffman, tree);
+>>>>>>> 21a6b6ae1fedeb44906367fad1ef86ab3ca19afa
 
 
 

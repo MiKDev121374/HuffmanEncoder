@@ -86,7 +86,9 @@ public class HuffmanCode {
         }
     }
 
+
     public static void decode(HuffmanTree tree, HuffmanTree newTree, int[] code, int index, BufferedWriter decBw) throws IOException{
+
         assert tree != null;
         //System.out.println("\n\nbeginning code[index] = " + code[index]);
         if (tree instanceof HuffmanLeaf){
@@ -96,6 +98,7 @@ public class HuffmanCode {
             //System.out.println("final leaf == "+leaf.value);
             decBw.write(leaf.value);
             //encBw.write(huffman.encodedPairings.get(charToEncode[i]));
+
             // check if not the end of array
             if (code.length != index){
                 //++index;
@@ -105,6 +108,7 @@ public class HuffmanCode {
                 }
                 else {
                     decode(node.right, newTree, code, ++index, decBw);
+
                 }
             }
             // ++index
@@ -113,6 +117,7 @@ public class HuffmanCode {
         }
         else if (tree instanceof HuffmanNode){
             HuffmanNode node = (HuffmanNode)tree;
+
             //System.out.println("before if code[index] = " + code[index]);
             if (code[index] == 0){
                 //System.out.println("code[index] = " + code[index]);
@@ -121,6 +126,7 @@ public class HuffmanCode {
             else {
                 //System.out.println("code[index] = " + code[index]);
                 decode(node.right, newTree, code, ++index, decBw);
+
             }
         }
         //if (idex == code.length)
