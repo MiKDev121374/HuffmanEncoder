@@ -129,27 +129,5 @@ public class HuffmanCode {
 
             }
         }
-        //if (idex == code.length)
     }
- 
-    // public static void main(String[] args) {
-    //     String test = "this is an example for huffman encoding";
- 
-    //     // we will assume that all our characters will have
-    //     // code less than 256, for simplicity
-    //     int[] charFreqs = new int[256];
-    //     // read each character and record the frequencies
-    //     for (char c : test.toCharArray())
-    //         charFreqs[c]++;
- 
-    //     // build tree
-    //     //*****change this to receive an array of our character frequencies
-    //     HuffmanTree tree = buildTree(charFreqs);
-    //     //freqCharArray
-    //     //HuffmanTree tree = buildTree(freqCharArray);
- 
-    //     // print out results
-    //     System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
-    //     printCodes(tree, new StringBuffer());
-    // }
 }
