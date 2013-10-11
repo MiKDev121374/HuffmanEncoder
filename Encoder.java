@@ -6,7 +6,6 @@ class AlphaChar{
 	public char letter;
 	public int freq;
 	public String encoding;
-    //public double probability;
 
 	AlphaChar(char l, int fr){
 		letter = l;
@@ -105,8 +104,6 @@ class Encoder{
         }
         entropy = -entropy;
         System.out.println("Entropy  = " + entropy);
-         
-
 
 
 		//===Generate dartboard for proportional character generation
@@ -136,13 +133,17 @@ class Encoder{
         HuffmanTree tree = huffman.buildTree(freqCharArray);
         HuffmanTree newTree = huffman.buildTree(freqCharArray);
 
-        //====Print out results
+        //====Print out results of Huffman encoding
         System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
         huffman.printCodes(tree, new StringBuffer());
+        double totalBits = 0;
         for (int i = 0; i < freqCharArray.size(); i++){
         	freqCharArray.get(i).encoding = huffman.encodedPairings.get(freqCharArray.get(i).letter);
-        	//System.out.println("encoding for " + freqCharArray.get(i).letter + " set to " + freqCharArray.get(i).encoding);
+            totalBits += freqCharArray.get(i).encoding.length();
         }
+        System.out.println("totalBits = " + totalBits);
+        double bitsPerSymbol = totalBits / lengthOfAlphabet;
+        System.out.println("bitsPerSymbol = " + bitsPerSymbol);
 
         File encTestText = new File("testText.enc1");
         File decTestText = new File("testText.dec1");
