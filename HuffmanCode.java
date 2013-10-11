@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 // from http://rosettacode.org/wiki/Huffman_coding#Java
 
@@ -85,25 +86,41 @@ public class HuffmanCode {
         }
     }
 
-    public static void decode(HuffmanTree tree, int[] code, int index){
+    public static void decode(HuffmanTree tree, HuffmanTree newTree, int[] code, int index, BufferedWriter decBw) throws IOException{
         assert tree != null;
-
+        //System.out.println("\n\nbeginning code[index] = " + code[index]);
         if (tree instanceof HuffmanLeaf){
             HuffmanLeaf leaf = (HuffmanLeaf)tree;
             //decodedPairings.(code, leaf.value);
             decodedSB.append(leaf.value);
-            System.out.println("final leaf == "+leaf.value);
+            //System.out.println("final leaf == "+leaf.value);
+            decBw.write(leaf.value);
+            //encBw.write(huffman.encodedPairings.get(charToEncode[i]));
+            // check if not the end of array
+            if (code.length != index){
+                //++index;
+                HuffmanNode node = (HuffmanNode)newTree;
+                if (code[index] == 0) {
+                    decode(node.left, newTree, code, ++index, decBw);
+                }
+                else {
+                    decode(node.right, newTree, code, ++index, decBw);
+                }
+            }
+            // ++index
+            // if (code[index] == 0) {decode(node.left, code, ++index);}
+            //  else {decode(node.right, code, ++index);}
         }
         else if (tree instanceof HuffmanNode){
             HuffmanNode node = (HuffmanNode)tree;
-
+            //System.out.println("before if code[index] = " + code[index]);
             if (code[index] == 0){
-                System.out.println("code[index] = " + code[index]);
-                decode(node.left, code, index++);
+                //System.out.println("code[index] = " + code[index]);
+                decode(node.left, newTree, code, ++index, decBw);
             }
             else {
-                System.out.println("code[index] = " + code[index]);
-                decode(node.right, code, index++);
+                //System.out.println("code[index] = " + code[index]);
+                decode(node.right, newTree, code, ++index, decBw);
             }
         }
         //if (idex == code.length)

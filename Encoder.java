@@ -27,15 +27,13 @@ class Encode{
         String fileInput;
         
         if (encFile1.hasNext()){
-        	// System.out.println(encFile1.next());
-        	// file.write(huffman.encodedPairings.get(encFile1.next()));
         	fileInput = encFile1.next();
         	char[] charToEncode = fileInput.toCharArray();
 
         	for (int i = 0; i < charToEncode.length; i++){
-        		System.out.print(charToEncode[i]);
+        		//System.out.print(charToEncode[i]);
         		// file.write(huffman.encodedPairings.get(charToEncode[i]));
-        		System.out.print(huffman.encodedPairings.get(charToEncode[i]));
+        		//System.out.print(huffman.encodedPairings.get(charToEncode[i]));
         		encBw.write(huffman.encodedPairings.get(charToEncode[i]));
         	}
         }
@@ -48,11 +46,32 @@ class Encode{
 class Decode{
 	//get file testText.enc1
 	//parse and write decoded version to testText.dec1
-	Decode(File encTestText, HuffmanCode huffman, HuffmanTree tree){
-		int[] toDecode = {0,1};
-		huffman.decode(tree, toDecode, 0);
-		System.out.println("\nhuffman.decodedSB====================");
-		System.out.println(huffman.decodedSB);
+	Decode(File encTestText, File decTestText, HuffmanTree newTree, HuffmanCode huffman, HuffmanTree tree) throws IOException{
+
+                FileWriter decFw = new FileWriter(decTestText);
+                BufferedWriter decBw = new BufferedWriter(decFw);
+
+                Scanner decFile1 = new Scanner(new FileReader(encTestText));
+
+                String fileInput;
+                if (decFile1.hasNext()){
+                        fileInput = decFile1.next();
+                        //System.out.println("fileInput = " + fileInput + "======\n");
+                        char[] charToDecode = fileInput.toCharArray();
+                        int[] toDecode = new int[charToDecode.length];
+                        for (int i = 0; i < charToDecode.length; i++){
+                                toDecode[i] = charToDecode[i] - '0';
+                                //System.out.print(toDecode[i]);
+                        }       
+                        huffman.decode(tree, newTree, toDecode, 0, decBw);
+                }
+
+		//int[] toDecode = {0,1};
+		//huffman.decode(tree, newTree, toDecode, 0);
+		// System.out.println("\nhuffman.decodedSB====================");
+		// System.out.println(huffman.decodedSB);
+                decBw.flush();
+                decBw.close();
 	}
 }
 
@@ -113,6 +132,7 @@ class Encoder{
         //===Get Huffman encoding for each letter of the alphabet
         HuffmanCode huffman = new HuffmanCode();
         HuffmanTree tree = huffman.buildTree(freqCharArray);
+        HuffmanTree newTree = huffman.buildTree(freqCharArray);
         // print out results
         System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
         huffman.printCodes(tree, new StringBuffer());
@@ -128,8 +148,9 @@ class Encoder{
 
 
         File encTestText = new File("testText.enc1");
+        File decTestText = new File("testText.dec1");
         Encode encodeFile = new Encode(testText, encTestText, huffman);
-        Decode decodeFile = new Decode(encTestText, huffman, tree);
+        Decode decodeFile = new Decode(encTestText, decTestText, newTree, huffman, tree);
 
 
 
