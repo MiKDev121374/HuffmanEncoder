@@ -31,7 +31,7 @@ class DoubleChar{
 class Encode{
 	//get file testText
 	//parse each char, write encoded version to testText.enc1
-	Encode(File file, File encTestText, HuffmanCode huffman) throws IOException{
+	Encode(File file, File encTestText, HuffmanCode huffman, Boolean one) throws IOException{
 		
                 FileWriter encFw = new FileWriter(encTestText);
                 BufferedWriter encBw = new BufferedWriter(encFw);
@@ -39,13 +39,22 @@ class Encode{
                 Scanner encFile1 = new Scanner(new FileReader(file));
 
                 String fileInput;
+                String doubleMatch;
                 
                 if (encFile1.hasNext()){
                 	fileInput = encFile1.next();
                 	char[] charToEncode = fileInput.toCharArray();
-                	for (int i = 0; i < charToEncode.length; i++){
-                		encBw.write(huffman.encodedPairings.get(charToEncode[i]));
-                	}
+                    if (one){
+                    	for (int i = 0; i < charToEncode.length; i++){
+                    		encBw.write(huffman.encodedPairings.get(charToEncode[i]));
+                    	}
+                    }
+                    else{
+                        for (int i = 0; i < charToEncode.length; i+=2){
+                            doubleMatch = Character.toString(charToEncode[i]) + Character.toString(charToEncode[i+1]);
+                            encBw.write(huffman.encodedPairings2.get(doubleMatch));
+                        }
+                    }
                 }
 
                 encBw.flush();
@@ -57,7 +66,7 @@ class Decode{
 	//get file testText.enc1
 	//parse and write decoded version to testText.dec1
     //new Decode(encTestText, decTestText, newTree, huffman, tree);
-	Decode(File encTestText, File decTestText, HuffmanTree newTree, HuffmanCode huffman, HuffmanTree tree) throws IOException{
+	Decode(File encTestText, File decTestText, HuffmanTree newTree, HuffmanCode huffman, HuffmanTree tree, HashMap<Character, String> doubleCharMap, Boolean one) throws IOException{
 
                 FileWriter decFw = new FileWriter(decTestText);
                 BufferedWriter decBw = new BufferedWriter(decFw);
@@ -71,9 +80,8 @@ class Decode{
                         int[] toDecode = new int[charToDecode.length];
                         for (int i = 0; i < charToDecode.length; i++){
                                 toDecode[i] = charToDecode[i] - '0';
-                        }
-                        System.out.println("toDecode's length = " + toDecode.length);       
-                        huffman.decode(tree, newTree, toDecode, 0, decBw);
+                        }      
+                        huffman.decode(tree, newTree, toDecode, 0, decBw, doubleCharMap, one);
                 }
 
                 decBw.flush();
@@ -197,8 +205,13 @@ class Encoder{
 
         File encTestText = new File("testText.enc1");
         File decTestText = new File("testText.dec1");
-        Encode encodeFile = new Encode(testText, encTestText, huffman);
-        Decode decodeFile = new Decode(encTestText, decTestText, newTree, huffman, tree);
+        Encode encodeFile = new Encode(testText, encTestText, huffman, true);
+        Decode decodeFile = new Decode(encTestText, decTestText, newTree, huffman, tree, doubleCharMap, true);
+
+        File encTestText2 = new File("testText.enc2");
+        File decTestText2 = new File("testText.dec2");
+        Encode encodeFile2 = new Encode(testText, encTestText2, huffman2, false);
+        Decode decodeFile2 = new Decode(encTestText2, decTestText2, newTree2, huffman2, tree2, doubleCharMap, false);
 
 
         System.out.println("Total frequency Denominator for char1 alphabet= " + freqTotal);

@@ -116,7 +116,7 @@ public class HuffmanCode {
     }
 
     //decode(tree, newTree, toDecode, 0, decBw);
-    public static void decode(HuffmanTree tree, HuffmanTree newTree, int[] code, int index, BufferedWriter decBw) throws IOException{
+    public static void decode(HuffmanTree tree, HuffmanTree newTree, int[] code, int index, BufferedWriter decBw, HashMap<Character, String> doubleCharMap, Boolean one) throws IOException{
 
         assert tree != null;
         //System.out.println("\n\nbeginning code[index] = " + code[index]);
@@ -125,7 +125,12 @@ public class HuffmanCode {
             //decodedPairings.(code, leaf.value);
             decodedSB.append(leaf.value);
             //System.out.println("final leaf == "+leaf.value);
-            decBw.write(leaf.value);
+            if (one){
+                decBw.write(leaf.value);
+            }
+            else{
+                decBw.write(doubleCharMap.get(leaf.value));
+            }
             //encBw.write(huffman.encodedPairings.get(charToEncode[i]));
 
             // check if not the end of array
@@ -133,10 +138,10 @@ public class HuffmanCode {
                 //++index;
                 HuffmanNode node = (HuffmanNode)newTree;
                 if (code[index] == 0) {
-                    decode(node.left, newTree, code, ++index, decBw);
+                    decode(node.left, newTree, code, ++index, decBw, doubleCharMap, one);
                 }
                 else {
-                    decode(node.right, newTree, code, ++index, decBw);
+                    decode(node.right, newTree, code, ++index, decBw, doubleCharMap, one);
 
                 }
             }
@@ -150,11 +155,11 @@ public class HuffmanCode {
             //System.out.println("before if code[index] = " + index);
             if (code[index] == 0){
                 //System.out.println("code[index] = " + code[index]);
-                decode(node.left, newTree, code, ++index, decBw);
+                decode(node.left, newTree, code, ++index, decBw, doubleCharMap, one);
             }
             else {
                 //System.out.println("code[index] = " + code[index]);
-                decode(node.right, newTree, code, ++index, decBw);
+                decode(node.right, newTree, code, ++index, decBw, doubleCharMap, one);
 
             }
         }
