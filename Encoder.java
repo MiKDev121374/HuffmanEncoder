@@ -100,10 +100,10 @@ class Encoder{
         File testText = new File("testText");
         FileWriter fw = new FileWriter(testText);
         BufferedWriter bw = new BufferedWriter(fw);
+        ArrayList<Character> dartboard = new ArrayList<Character>();
 
         //Single char alphabet
 		ArrayList<AlphaChar> freqCharArray = new ArrayList<AlphaChar>();
-		ArrayList<Character> dartboard = new ArrayList<Character>();
         //Double char alphabet
         ArrayList<DoubleChar> freqDoubleArray2 = new ArrayList<DoubleChar>();
         ArrayList<AlphaChar> freqCharArray2 = new ArrayList<AlphaChar>();
@@ -202,6 +202,13 @@ class Encoder{
         System.out.println("\nSYMBOL\tWEIGHT\tHUFFMAN CODE");
         huffman.printCodes2(tree2, doubleCharMap, new StringBuffer());
 
+        //Assign 2char alphabet encodings
+        double totalBits2 = 0;
+        for (int i = 0; i < freqDoubleArray2.size(); i++){
+            freqDoubleArray2.get(i).encoding = huffman.encodedPairings2.get(freqDoubleArray2.get(i).letter);
+            totalBits2 += freqDoubleArray2.get(i).encoding.length();
+        }
+
 
         File encTestText = new File("testText.enc1");
         File decTestText = new File("testText.dec1");
@@ -214,16 +221,23 @@ class Encoder{
         Decode decodeFile2 = new Decode(encTestText2, decTestText2, newTree2, huffman2, tree2, doubleCharMap, false);
 
 
-        System.out.println("Total frequency Denominator for char1 alphabet= " + freqTotal);
+        System.out.println("\n\nTotal frequency Denominator for char1 alphabet= " + freqTotal);
         System.out.println("Total frequency Denominator for char2 alphabet= " + freqTotal2);
 
-        //==Compute entropy of this language
+        //==Compute entropies of this language
         double entropy = 0;
         for (int i=0; i < freqCharArray.size(); i++){
             entropy += (freqCharArray.get(i).freq)/((double)freqTotal) * (Math.log((freqCharArray.get(i).freq)/((double)freqTotal))/Math.log(2));
         }
         entropy = -entropy;
         System.out.println("Entropy for 1char alphabet = " + entropy);
+
+        double entropy2 = 0;
+        for (int i=0; i < freqDoubleArray2.size(); i++){
+            entropy2 += (freqDoubleArray2.get(i).freq)/((double)freqTotal2) * (Math.log((freqDoubleArray2.get(i).freq)/((double)freqTotal2))/Math.log(2));
+        }
+        entropy2 = -entropy2;
+        System.out.println("Entropy for 2char alphabet = " + entropy2);
 
 
         System.out.println("totalBits = " + totalBits);
@@ -232,6 +246,13 @@ class Encoder{
         //=== Compare bits per symbol to entropy
         double percentDiff = ((bitsPerSymbol - entropy) / entropy)*100;
         System.out.println("percentDiff = " + percentDiff);
+
+        System.out.println("totalBits2 = " + totalBits2);
+        double bitsPerSymbol2 = totalBits2 / lengthOfAlphabet2;
+        System.out.println("bitsPerSymbol2 = " + bitsPerSymbol2);
+        //=== Compare bits per symbol to entropy
+        double percentDiff2 = ((bitsPerSymbol2 - entropy2) / entropy2)*100;
+        System.out.println("percentDiff2 = " + percentDiff2);
 
 
 		System.out.println("\n\nEncoder!");
