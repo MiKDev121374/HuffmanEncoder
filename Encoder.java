@@ -13,6 +13,21 @@ class AlphaChar{
 	}
 }
 
+class DoubleChar{
+    //Holds two chars now
+    public String letter;
+    public char assignedChar;
+    //this is calculated by multiplying the AlphaChar.freq's of the 2 chars it is made of
+    public int freq;
+    public String encoding;
+
+    DoubleChar(String l, int fr, char assigned){
+        letter = l;
+        freq = fr;
+        assignedChar = assigned;
+    }
+}
+
 class Encode{
 	//get file testText
 	//parse each char, write encoded version to testText.enc1
@@ -41,6 +56,7 @@ class Encode{
 class Decode{
 	//get file testText.enc1
 	//parse and write decoded version to testText.dec1
+    //new Decode(encTestText, decTestText, newTree, huffman, tree);
 	Decode(File encTestText, File decTestText, HuffmanTree newTree, HuffmanCode huffman, HuffmanTree tree) throws IOException{
 
                 FileWriter decFw = new FileWriter(decTestText);
@@ -55,7 +71,8 @@ class Decode{
                         int[] toDecode = new int[charToDecode.length];
                         for (int i = 0; i < charToDecode.length; i++){
                                 toDecode[i] = charToDecode[i] - '0';
-                        }       
+                        }
+                        System.out.println("toDecode's length = " + toDecode.length);       
                         huffman.decode(tree, newTree, toDecode, 0, decBw);
                 }
 
@@ -71,20 +88,36 @@ class Encoder{
 
 		//import frequencies file and generate matching alphabet
 		Scanner freqFile = new Scanner(new FileReader(args[0]));
-		ArrayList<AlphaChar> freqCharArray = new ArrayList<AlphaChar>();
-		ArrayList<Character> dartboard = new ArrayList<Character>();
-
-		//Create file to encode and decode
+        //Create file to encode and decode
         File testText = new File("testText");
         FileWriter fw = new FileWriter(testText);
         BufferedWriter bw = new BufferedWriter(fw);
 
-                //===Define the alphabet based on given frequency file
+        //Single char alphabet
+		ArrayList<AlphaChar> freqCharArray = new ArrayList<AlphaChar>();
+		ArrayList<Character> dartboard = new ArrayList<Character>();
+        //Double char alphabet
+        ArrayList<DoubleChar> freqDoubleArray2 = new ArrayList<DoubleChar>();
+        ArrayList<AlphaChar> freqCharArray2 = new ArrayList<AlphaChar>();
+        HashMap<Character, String> doubleCharMap = new HashMap<Character, String>();
+
+
+        //======Define the alphabets based on given frequency file=====
+        //single char alphabet
 		int freqOfAlpha;
-        //Denominator of all probabilities associated with this language
+        //Denominator of all probabilities associated with this 1char language
 		int freqTotal = 0;
 		int lengthOfAlphabet = 0;
 		char nextAlphabetChar;
+        //2char alphabet
+        int dFreq;
+        //Denominator of all probabilities associated with this language
+        int freqTotal2 = 0;
+        int lengthOfAlphabet2 = 0;
+        String dChar;
+        char assignedChar;
+
+
 		while (freqFile.hasNext()){
 			freqOfAlpha = Integer.valueOf(freqFile.nextLine());
 			nextAlphabetChar = (char)(lengthOfAlphabet+65);
@@ -95,7 +128,81 @@ class Encoder{
 			freqTotal += freqOfAlpha;
 			lengthOfAlphabet++;
 		}
-        //System.out.println("Total frequency Denominator = " + freqTotal);
+        //Make 2char alphabet based on 1char alphabet just created
+        for (int i=0; i<lengthOfAlphabet; i++){
+            for(int j=0; j<lengthOfAlphabet; j++){
+                dChar = Character.toString(freqCharArray.get(i).letter) + Character.toString(freqCharArray.get(j).letter);
+                //System.out.println("dChar = " + dChar);
+                dFreq = freqCharArray.get(i).freq * freqCharArray.get(j).freq;
+                //System.out.println("dFreq = " + dFreq);
+                assignedChar = (char)lengthOfAlphabet2;
+                //System.out.println("assignedChar = " + assignedChar);
+                freqDoubleArray2.add(new DoubleChar(dChar, dFreq, assignedChar));
+                freqCharArray2.add(new AlphaChar(assignedChar,dFreq));
+                doubleCharMap.put(assignedChar, dChar);
+                freqTotal2 += dFreq;
+                lengthOfAlphabet2++;
+            }
+        }
+
+        //===Generate dartboard for proportional character generation
+        int numToGenerate = Integer.valueOf(args[1]);
+        //if not divisible by 2 add extra symbol for the 2-char encoding
+        if (numToGenerate % 2 != 0){
+            numToGenerate++;
+        }
+        System.out.println("number of chars to encode/decode= " + numToGenerate);
+        Random rand = new Random();
+        //Prints dartboard arraylist
+        // for (int i=0; i<freqTotal; i++){
+        //  System.out.print(dartboard.get(i));
+        // }
+        //===Generate proportional random file testText
+        for(int i = 0; i < numToGenerate; i++){
+            // generate a random number in a range 0 to freqTotal
+            int randNum = rand.nextInt(freqTotal);
+            //System.out.println("random number generated = " + randNum);
+            //System.out.println("dart landed on " + dartboard.get(randNum));
+            bw.write(dartboard.get(randNum));
+        }
+        bw.flush();
+        bw.close();
+
+
+
+        //===Get Huffman encoding for each letter of the 1char alphabet
+        HuffmanCode huffman = new HuffmanCode();
+        HuffmanTree tree = huffman.buildTree(freqCharArray);
+        HuffmanTree newTree = huffman.buildTree(freqCharArray);
+        //====Print out results of Huffman encoding
+        System.out.println("\nSYMBOL\tWEIGHT\tHUFFMAN CODE");
+        huffman.printCodes(tree, new StringBuffer());
+
+        //Assign 1char alphabet encodings
+        double totalBits = 0;
+        for (int i = 0; i < freqCharArray.size(); i++){
+            freqCharArray.get(i).encoding = huffman.encodedPairings.get(freqCharArray.get(i).letter);
+            totalBits += freqCharArray.get(i).encoding.length();
+        }
+
+
+        //===Get Huffman encoding for each letter of the 2char alphabet
+        HuffmanCode huffman2 = new HuffmanCode();
+        HuffmanTree tree2 = huffman.buildTree(freqCharArray2);
+        HuffmanTree newTree2 = huffman.buildTree(freqCharArray2);
+        //====Print out results of Huffman encoding
+        System.out.println("\nSYMBOL\tWEIGHT\tHUFFMAN CODE");
+        huffman.printCodes2(tree2, doubleCharMap, new StringBuffer());
+
+
+        File encTestText = new File("testText.enc1");
+        File decTestText = new File("testText.dec1");
+        Encode encodeFile = new Encode(testText, encTestText, huffman);
+        Decode decodeFile = new Decode(encTestText, decTestText, newTree, huffman, tree);
+
+
+        System.out.println("Total frequency Denominator for char1 alphabet= " + freqTotal);
+        System.out.println("Total frequency Denominator for char2 alphabet= " + freqTotal2);
 
         //==Compute entropy of this language
         double entropy = 0;
@@ -103,54 +210,18 @@ class Encoder{
             entropy += (freqCharArray.get(i).freq)/((double)freqTotal) * (Math.log((freqCharArray.get(i).freq)/((double)freqTotal))/Math.log(2));
         }
         entropy = -entropy;
-        System.out.println("Entropy  = " + entropy);
+        System.out.println("Entropy for 1char alphabet = " + entropy);
 
 
-		//===Generate dartboard for proportional character generation
-		int numToGenerate = Integer.valueOf(args[1]);
-		//System.out.println("number of chars to encode/decode= " + numToGenerate);
-		Random rand = new Random();
-		//Prints dartboard arraylist
-		// for (int i=0; i<freqTotal; i++){
-		// 	System.out.print(dartboard.get(i));
-		// }
-
-
-		//===Generate proportional random file testText
-		for(int i = 0; i < numToGenerate; i++){
-			// generate a random number in a range 0 to freqTotal
-			int randNum = rand.nextInt(freqTotal);
-			//System.out.println("random number generated = " + randNum);
-			//System.out.println("dart landed on " + dartboard.get(randNum));
-			bw.write(dartboard.get(randNum));
-		}
-		bw.flush();
-        bw.close();
-
-
-        //===Get Huffman encoding for each letter of the alphabet
-        HuffmanCode huffman = new HuffmanCode();
-        HuffmanTree tree = huffman.buildTree(freqCharArray);
-        HuffmanTree newTree = huffman.buildTree(freqCharArray);
-
-        //====Print out results of Huffman encoding
-        System.out.println("SYMBOL\tWEIGHT\tHUFFMAN CODE");
-        huffman.printCodes(tree, new StringBuffer());
-        double totalBits = 0;
-        for (int i = 0; i < freqCharArray.size(); i++){
-        	freqCharArray.get(i).encoding = huffman.encodedPairings.get(freqCharArray.get(i).letter);
-            totalBits += freqCharArray.get(i).encoding.length();
-        }
         System.out.println("totalBits = " + totalBits);
         double bitsPerSymbol = totalBits / lengthOfAlphabet;
         System.out.println("bitsPerSymbol = " + bitsPerSymbol);
+        //=== Compare bits per symbol to entropy
+        double percentDiff = ((bitsPerSymbol - entropy) / entropy)*100;
+        System.out.println("percentDiff = " + percentDiff);
 
-        File encTestText = new File("testText.enc1");
-        File decTestText = new File("testText.dec1");
-        Encode encodeFile = new Encode(testText, encTestText, huffman);
-        Decode decodeFile = new Decode(encTestText, decTestText, newTree, huffman, tree);
 
-		System.out.println("\nEncoder!");
+		System.out.println("\n\nEncoder!");
 
 	}
 }
